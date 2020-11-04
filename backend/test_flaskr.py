@@ -18,6 +18,13 @@ class TriviaTestCase(unittest.TestCase):
         self.database_path = "postgres://{}/{}".format('localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
+        self.add_question = {
+            'question': 'Which month is this?',
+            'answer': 'It is the fall',
+            'category': '1',
+            'difficulty': 1
+        }
+
         # binds the app to the current context
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -34,7 +41,77 @@ class TriviaTestCase(unittest.TestCase):
     Write at least one test for each test for successful operation and for expected errors.
     """
 
+    # def test_get_paginate_questions(self):
+    #     res = self.client().get('/questions')
+    #     data = json.loads(res.data)
+
+    #     self.assertEqual(res.status_code, 200)
+    #     self.assertEqual(data['success'], True)
+    #     self.assertTrue(data['questions'])
+    #     self.assertTrue(len(data['questions']))
+
+    # def test_404_sent_request_beyond_valid_page(self):
+    #     res = self.client().get('/questions?page=1000')
+    #     data = json.loads(res.data)
+
+    #     self.assertEqual(res.status_code, 404)
+    #     self.assertEqual(data['success'], False)
+    #     self.assertEqual(data['message'], 'resource not found')
+
+    def test_get_categories(self):
+        res = self.client().get('/categories')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['categories'], ['Science',
+                                             'Art',
+                                             'Geography',
+                                             'History',
+                                             'Entertainment',
+                                             'Sports'])
+        self.assertEqual(data['total_categories'], len(Category.query.all()))
+
+    
+    # def test_questions(self):
+    #     res = self.client().get('/questions')
+    #     data = json.loads(res.data)
+
+    #     self.assertEqual(res.status_code, 200)
+    #     self.assertEqual(data['success'], True)
+    #     self.assertTrue(data['questions'])
+    #     self.assertEqual(data['total_questions'], len(Question.query.all()))
+    #     #self.assertEqual(data['current_category'], 'None')
+    #     #self.assertEqual(data['categories'], ['Science',
+    #     #                                      'Art',
+    #     #                                      'Geography',
+    #     #                                      'History',
+    #     #                                      'Entertainment',
+    #     #                                      'Sports'])
+    
+
+    # def test_delete_question(self):
+    #     insert_res = self.client().post('/questions', json=self.add_question)
+    #     insert_data = json.loads(insert_res.data)
+    #     question_id = insert_data['created']
+
+    #     res = self.client().delete(f'/questions/{question_id}')
+    #     data = json.loads(res.data)
+
+    #     self.assertEqual(res.status_code, 200)
+    #     self.assertEqual(data['success'], True)
+
+    # def test_create_question(self):
+    #     res = self.client().post('/questions/create', json=self.add_question)
+    #     data = json.loads(res.data)
+
+    #     self.assertEqual(res.status_code, 200)
+    #     self.assertEqual(data['success'], True)
+    #     self.assertTrue(data['questions'])
+    #     self.assertTrue(data['total_questions'])
+         
+    
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main()              
